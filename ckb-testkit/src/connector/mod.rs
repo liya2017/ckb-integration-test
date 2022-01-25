@@ -41,7 +41,7 @@ pub struct Connector {
     key_pair: SecioKeyPair,
     shared: Arc<RwLock<SharedState>>,
     p2p_service_controller: P2PServiceControl,
-    _stop_handler: StopHandler<tokio::sync::oneshot::Sender<()>>,
+    stop_handler: StopHandler<tokio::sync::oneshot::Sender<()>>,
 }
 
 impl Default for ConnectorBuilder {
@@ -139,7 +139,7 @@ impl ConnectorBuilder {
             key_pair,
             shared,
             p2p_service_controller,
-            _stop_handler: StopHandler::new(
+            stop_handler: StopHandler::new(
                 SignalSender::Tokio(stopped_signal_sender),
                 None,
                 "connector".to_string(),
@@ -273,5 +273,9 @@ impl Connector {
 
     pub fn key_pair(&self) -> &SecioKeyPair {
         &self.key_pair
+    }
+
+    pub fn stop_handler(&self) -> &StopHandler<tokio::sync::oneshot::Sender<()>> {
+        &self.stop_handler
     }
 }
